@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>文字烟花雨 - 张胜新是蠢猪</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		
+		body {
+			background-color: #0a0a20;
+			color: #fff;
+			font-family: 'Microsoft YaHei', sans-serif;
+			overflow: hidden;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		
+		.container {
+			width: 100%;
+			height: 100%;
+			position: relative;
+		}
+		
+		canvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+		}
+		
+		.header {
+			position: absolute;
+			top: 20px;
+			width: 100%;
+			text-align: center;
+			z-index: 2;
+			padding: 20px;
+		}
+		
+		h1 {
+			font-size: 3.5rem;
+			margin-bottom: 10px;
+			background: linear-gradient(to right, #ff5e7d, #ff8a00, #ffd166, #06d6a0, #1cb5e0);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+		}
+		
+		.subtitle {
+			font-size: 1.2rem;
+			color: #aaa;
+			margin-bottom: 30px;
+		}
+		
+		.controls {
+			position: absolute;
+			bottom: 30px;
+			left: 0;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			z-index: 2;
+			flex-wrap: wrap;
+		}
+		
+		button {
+			background: rgba(255, 255, 255, 0.1);
+			border: 2px solid rgba(255, 255, 255, 0.3);
+			color: white;
+			padding: 12px 24px;
+			border-radius: 50px;
+			font-size: 1.1rem;
+			cursor: pointer;
+			transition: all 0.3s;
+			backdrop-filter: blur(5px);
+		}
+		
+		button:hover {
+			background: rgba(255, 255, 255, 0.2);
+			transform: translateY(-3px);
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		}
+		
+		button:active {
+			transform: translateY(1px);
+		}
+		
+		.info {
+			position: absolute;
+			top: 50%;
+			left: 20px;
+			transform: translateY(-50%);
+			background: rgba(0, 0, 0, 0.5);
+			padding: 20px;
+			border-radius: 15px;
+			max-width: 300px;
+			z-index: 2;
+			backdrop-filter: blur(5px);
+		}
+		
+		.info h3 {
+			margin-bottom: 10px;
+			color: #ffd166;
+		}
+		
+		.info p {
+			line-height: 1.6;
+			margin-bottom: 10px;
+			color: #ccc;
+		}
+		
+		.firework-count {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background: rgba(0, 0, 0, 0.5);
+			padding: 10px 20px;
+			border-radius: 10px;
+			z-index: 2;
+			backdrop-filter: blur(5px);
+		}
+		
+		.message {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 2.5rem;
+			text-align: center;
+			background: rgba(0, 0, 0, 0.7);
+			padding: 30px 50px;
+			border-radius: 20px;
+			z-index: 2;
+			display: none;
+			animation: pulse 2s infinite;
+		}
+		
+		@keyframes pulse {
+			0% { box-shadow: 0 0 0 0 rgba(255, 94, 125, 0.7); }
+			70% { box-shadow: 0 0 0 20px rgba(255, 94, 125, 0); }
+			100% { box-shadow: 0 0 0 0 rgba(255, 94, 125, 0); }
+		}
+		
+		@media (max-width: 768px) {
+			h1 {
+				font-size: 2.5rem;
+			}
+			
+			.controls {
+				flex-direction: column;
+				align-items: center;
+			}
+			
+			.info {
+				position: relative;
+				top: auto;
+				left: auto;
+				transform: none;
+				margin: 20px;
+				max-width: 90%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>文字烟花雨</h1>
+			<div class="subtitle">点击屏幕任意位置发射烟花，或使用控制按钮</div>
+		</div>
+		
+		<div class="info">
+			<h3>使用说明</h3>
+			<p>1. 点击屏幕任意位置发射文字烟花</p>
+			<p>2. 点击"自动发射"开启自动烟花模式</p>
+			<p>3. 点击"大爆炸"同时发射多个烟花</p>
+			<p>4. 烟花文字内容："张胜新是蠢猪"</p>
+			<p>5. 每个烟花由这些文字组成，以随机颜色显示</p>
+		</div>
+		
+		<div class="firework-count">
+			烟花数量: <span id="count">0</span>
+		</div>
+		
+		<div class="message" id="message">
+			张胜新是蠢猪
+		</div>
+		
+		<div class="controls">
+			<button id="autoFire">自动发射</button>
+			<button id="bigBang">大爆炸</button>
+			<button id="changeColors">切换颜色</button>
+			<button id="showMessage">显示文字</button>
+			<button id="clearAll">清除所有</button>
+		</div>
+		
+		<canvas id="fireworksCanvas"></canvas>
+	</div>
+
+	<script>
+		// 获取Canvas元素和上下文
+		const canvas = document.getElementById('fireworksCanvas');
+		const ctx = canvas.getContext('2d');
+		
+		// 设置Canvas尺寸为窗口大小
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		
+		// 窗口大小改变时重置Canvas尺寸
+		window.addEventListener('resize', function() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		});
+		
+		// 烟花文字
+		const fireworkText = "张胜新是蠢猪";
+		const textChars = fireworkText.split('');
+		
+		// 烟花数组
+		let fireworks = [];
+		// 粒子数组
+		let particles = [];
+		
+		// 颜色模式
+		let colorMode = 'rainbow'; // rainbow, warm, cool, random
+		const colorModes = {
+			rainbow: ['#FF5E7D', '#FF8A00', '#FFD166', '#06D6A0', '#1CB5E0', '#9D4EDD'],
+			warm: ['#FF5E7D', '#FF8A00', '#FFD166', '#FF2E00', '#FF9A00'],
+			cool: ['#1CB5E0', '#06D6A0', '#9D4EDD', '#4CC9F0', '#4361EE'],
+			random: ['#FF5E7D', '#FF8A00', '#FFD166', '#06D6A0', '#1CB5E0', '#9D4EDD', '#FF2E00', '#FF9A00', '#4CC9F0', '#4361EE']
+		};
+		
+		// 当前颜色方案
+		let currentColors = colorModes[colorMode];
+		
+		// 自动发射状态
+		let autoFireActive = false;
+		let autoFireInterval;
+		
+		// 烟花计数
+		let fireworkCount = 0;
+		
+		// 烟花类
+		class Firework {
+			constructor(x, y, targetX, targetY) {
+				this.x = x;
+				this.y = y;
+				this.startX = x;
+				this.startY = y;
+				this.targetX = targetX;
+				this.targetY = targetY;
+				this.distance = Math.sqrt(Math.pow(targetX - x, 2) + Math.pow(targetY - y, 2));
+				this.speed = 2 + Math.random() * 2;
+				this.velocity = {
+					x: (targetX - x) / (this.distance / this.speed),
+					y: (targetY - y) / (this.distance / this.speed)
+				};
+				this.acceleration = 0.05;
+				this.size = 3;
+				this.color = currentColors[Math.floor(Math.random() * currentColors.length)];
+				this.trail = [];
+				this.maxTrailLength = 5;
+				this.exploded = false;
+				fireworkCount++;
+				document.getElementById('count').textContent = fireworkCount;
+			}
+			
+			update() {
+				// 保存轨迹
+				this.trail.push({x: this.x, y: this.y});
+				if (this.trail.length > this.maxTrailLength) {
+					this.trail.shift();
+				}
+				
+				// 更新位置
+				this.velocity.y += this.acceleration;
+				this.x += this.velocity.x;
+				this.y += this.velocity.y;
+				
+				// 检查是否到达目标位置
+				const distanceToTarget = Math.sqrt(Math.pow(this.targetX - this.x, 2) + Math.pow(this.targetY - this.y, 2));
+				
+				if (distanceToTarget < 10) {
+					this.explode();
+				}
+				
+				// 绘制烟花
+				this.draw();
+			}
+			
+			draw() {
+				// 绘制轨迹
+				for (let i = 0; i < this.trail.length; i++) {
+					const point = this.trail[i];
+					const alpha = i / this.trail.length;
+					
+					ctx.beginPath();
+					ctx.arc(point.x, point.y, this.size * alpha, 0, Math.PI * 2);
+					ctx.fillStyle = this.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+					ctx.fill();
+				}
+				
+				// 绘制烟花头部
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+				
+				// 添加发光效果
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+				ctx.fillStyle = this.color.replace(')', ', 0.2)').replace('rgb', 'rgba');
+				ctx.fill();
+			}
+			
+			explode() {
+				this.exploded = true;
+				
+				// 创建粒子
+				const particleCount = 30 + Math.floor(Math.random() * 20);
+				
+				for (let i = 0; i < particleCount; i++) {
+					// 随机选择文字
+					const char = textChars[Math.floor(Math.random() * textChars.length)];
+					
+					// 创建粒子
+					particles.push(new Particle(
+						this.x, 
+						this.y, 
+						char, 
+						this.color
+					));
+				}
+			}
+		}
+		
+		// 粒子类
+		class Particle {
+			constructor(x, y, char, color) {
+				this.x = x;
+				this.y = y;
+				this.char = char;
+				this.color = color || currentColors[Math.floor(Math.random() * currentColors.length)];
+				this.size = 15 + Math.random() * 10;
+				this.speed = {
+					x: (Math.random() - 0.5) * 8,
+					y: (Math.random() - 0.5) * 8
+				};
+				this.gravity = 0.05;
+				this.friction = 0.97;
+				this.opacity = 1;
+				this.decay = 0.005 + Math.random() * 0.01;
+				this.rotation = Math.random() * Math.PI * 2;
+				this.rotationSpeed = (Math.random() - 0.5) * 0.1;
+			}
+			
+			update() {
+				// 应用摩擦力和重力
+				this.speed.x *= this.friction;
+				this.speed.y *= this.friction;
+				this.speed.y += this.gravity;
+				
+				// 更新位置
+				this.x += this.speed.x;
+				this.y += this.speed.y;
+				
+				// 更新旋转
+				this.rotation += this.rotationSpeed;
+				
+				// 减少透明度
+				this.opacity -= this.decay;
+				
+				// 绘制粒子
+				this.draw();
+				
+				// 检查粒子是否消失
+				return this.opacity <= 0;
+			}
+			
+			draw() {
+				ctx.save();
+				ctx.translate(this.x, this.y);
+				ctx.rotate(this.rotation);
+				ctx.globalAlpha = this.opacity;
+				
+				// 文字阴影
+				ctx.shadowColor = this.color;
+				ctx.shadowBlur = 20;
+				
+				// 绘制文字
+				ctx.font = `${this.size}px Arial, Microsoft YaHei, sans-serif`;
+				ctx.fillStyle = this.color;
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillText(this.char, 0, 0);
+				
+				ctx.restore();
+			}
+		}
+		
+		// 创建烟花
+		function createFirework(startX, startY, targetX, targetY) {
+			fireworks.push(new Firework(startX, startY, targetX, targetY));
+		}
+		
+		// 随机创建烟花
+		function createRandomFirework() {
+			const startX = Math.random() * canvas.width;
+			const startY = canvas.height;
+			const targetX = Math.random() * canvas.width;
+			const targetY = canvas.height * 0.2 + Math.random() * (canvas.height * 0.4);
+			
+			createFirework(startX, startY, targetX, targetY);
+		}
+		
+		// 创建大爆炸效果
+		function createBigBang() {
+			const explosionCount = 5 + Math.floor(Math.random() * 5);
+			
+			for (let i = 0; i < explosionCount; i++) {
+				setTimeout(() => {
+					const x = Math.random() * canvas.width;
+					const y = canvas.height * 0.2 + Math.random() * (canvas.height * 0.6);
+					
+					// 直接创建爆炸效果
+					const particleCount = 40 + Math.floor(Math.random() * 30);
+					
+					for (let j = 0; j < particleCount; j++) {
+						const char = textChars[Math.floor(Math.random() * textChars.length)];
+						particles.push(new Particle(x, y, char));
+					}
+					
+				}, i * 100);
+			}
+		}
+		
+		// 动画循环
+		function animate() {
+			// 清空画布，使用半透明黑色实现拖尾效果
+			ctx.fillStyle = 'rgba(10, 10, 32, 0.1)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			
+			// 更新和绘制所有烟花
+			for (let i = fireworks.length - 1; i >= 0; i--) {
+				fireworks[i].update();
+				
+				// 移除已爆炸的烟花
+				if (fireworks[i].exploded) {
+					fireworks.splice(i, 1);
+				}
+			}
+			
+			// 更新和绘制所有粒子
+			for (let i = particles.length - 1; i >= 0; i--) {
+				if (particles[i].update()) {
+					particles.splice(i, 1);
+				}
+			}
+			
+			// 继续动画循环
+			requestAnimationFrame(animate);
+		}
+		
+		// 开始动画
+		animate();
+		
+		// 自动发射烟花
+		function startAutoFire() {
+			if (autoFireActive) return;
+			
+			autoFireActive = true;
+			autoFireInterval = setInterval(() => {
+				createRandomFirework();
+			}, 500);
+			
+			document.getElementById('autoFire').textContent = '停止自动';
+		}
+		
+		// 停止自动发射
+		function stopAutoFire() {
+			autoFireActive = false;
+			clearInterval(autoFireInterval);
+			document.getElementById('autoFire').textContent = '自动发射';
+		}
+		
+		// 切换颜色模式
+		function changeColorMode() {
+			const modes = Object.keys(colorModes);
+			const currentIndex = modes.indexOf(colorMode);
+			colorMode = modes[(currentIndex + 1) % modes.length];
+			currentColors = colorModes[colorMode];
+			document.getElementById('changeColors').textContent = `颜色: ${colorMode}`;
+		}
+		
+		// 显示文字消息
+		function showMessage() {
+			const messageEl = document.getElementById('message');
+			messageEl.textContent = fireworkText;
+			messageEl.style.display = 'block';
+			
+			setTimeout(() => {
+				messageEl.style.display = 'none';
+			}, 2000);
+		}
+		
+		// 清除所有烟花和粒子
+		function clearAll() {
+			fireworks = [];
+			particles = [];
+		}
+		
+		// 事件监听
+		// 点击Canvas创建烟花
+		canvas.addEventListener('click', function(e) {
+			const startX = canvas.width / 2;
+			const startY = canvas.height;
+			const targetX = e.clientX;
+			const targetY = e.clientY;
+			
+			createFirework(startX, startY, targetX, targetY);
+		});
+		
+		// 自动发射按钮
+		document.getElementById('autoFire').addEventListener('click', function() {
+			if (autoFireActive) {
+				stopAutoFire();
+			} else {
+				startAutoFire();
+			}
+		});
+		
+		// 大爆炸按钮
+		document.getElementById('bigBang').addEventListener('click', function() {
+			createBigBang();
+		});
+		
+		// 切换颜色按钮
+		document.getElementById('changeColors').addEventListener('click', changeColorMode);
+		
+		// 显示文字按钮
+		document.getElementById('showMessage').addEventListener('click', showMessage);
+		
+		// 清除所有按钮
+		document.getElementById('clearAll').addEventListener('click', clearAll);
+		
+		// 初始创建几个烟花
+		for (let i = 0; i < 3; i++) {
+			setTimeout(() => {
+				createRandomFirework();
+			}, i * 300);
+		}
+		
+		// 初始显示使用说明
+		document.getElementById('changeColors').textContent = `颜色: ${colorMode}`;
+	</script>
+</body>
+</html>
