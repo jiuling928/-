@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>康瑞瑶的浪漫回忆 - 本地保存版</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--primary-color: #ff6b9d;
+			--secondary-color: #4da6ff;
+			--bg-dark: #0c1021;
+			--bg-light: #1a1b3a;
+			--text-light: #f0f8ff;
+			--text-secondary: #b3d9ff;
+		}
+		
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+		}
+		
+		body {
+			background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 30%, #2d1b3a 100%);
+			color: var(--text-light);
+			min-height: 100vh;
+			overflow-x: hidden;
+			position: relative;
+		}
+		
+		/* 雪花背景 */
+		.snowflakes {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: 1;
+		}
+		
+		.snowflake {
+			position: absolute;
+			top: -20px;
+			background-color: rgba(255, 255, 255, 0.8);
+			border-radius: 50%;
+			opacity: 0.8;
+		}
+		
+		/* 主容器 */
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 2rem;
+			position: relative;
+			z-index: 2;
+		}
+		
+		/* 标题区域 */
+		.header {
+			text-align: center;
+			margin-bottom: 3rem;
+			padding-top: 2rem;
+			position: relative;
+		}
+		
+		.header h1 {
+			font-size: 4rem;
+			margin-bottom: 0.5rem;
+			background: linear-gradient(to right, #ff9ec0, var(--primary-color), #b3e0ff, var(--secondary-color));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+			font-family: 'Ma Shan Zheng', cursive;
+			letter-spacing: 3px;
+		}
+		
+		.header .subtitle {
+			font-size: 1.5rem;
+			color: var(--text-secondary);
+			margin-bottom: 1.5rem;
+			letter-spacing: 2px;
+			font-family: 'ZCOOL QingKe HuangYou', sans-serif;
+		}
+		
+		.heart-divider {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 2rem 0;
+		}
+		
+		.heart-divider i {
+			color: var(--primary-color);
+			margin: 0 1.5rem;
+			font-size: 2rem;
+			animation: heartbeat 1.5s ease-in-out infinite;
+			filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.7));
+		}
+		
+		.heart-divider .line {
+			height: 2px;
+			width: 150px;
+			background: linear-gradient(to right, transparent, var(--primary-color), var(--secondary-color), transparent);
+		}
+		
+		@keyframes heartbeat {
+			0%, 100% { transform: scale(1); }
+			50% { transform: scale(1.3); }
+		}
+		
+		/* 控制面板 */
+		.control-panel {
+			display: flex;
+			justify-content: center;
+			gap: 1rem;
+			margin: 2rem 0;
+			flex-wrap: wrap;
+		}
+		
+		.control-btn {
+			background: rgba(77, 166, 255, 0.2);
+			color: white;
+			border: 2px solid var(--secondary-color);
+			padding: 0.8rem 1.5rem;
+			border-radius: 30px;
+			cursor: pointer;
+			font-weight: 600;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		
+		.control-btn:hover {
+			background: rgba(77, 166, 255, 0.4);
+			transform: translateY(-3px);
+			box-shadow: 0 10px 20px rgba(77, 166, 255, 0.3);
+		}
+		
+		.control-btn.save {
+			background: rgba(76, 175, 80, 0.2);
+			border-color: #4CAF50;
+		}
+		
+		.control-btn.save:hover {
+			background: rgba(76, 175, 80, 0.4);
+			box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+		}
+		
+		.control-btn.clear {
+			background: rgba(244, 67, 54, 0.2);
+			border-color: #f44336;
+		}
+		
+		.control-btn.clear:hover {
+			background: rgba(244, 67, 54, 0.4);
+			box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
+		}
+		
+		/* 音乐播放器 */
+		.music-player {
+			max-width: 600px;
+			margin: 2rem auto;
+			background: rgba(20, 25, 45, 0.8);
+			border-radius: 20px;
+			padding: 2rem;
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+			border: 2px solid rgba(77, 166, 255, 0.3);
+			position: relative;
+			overflow: hidden;
+			backdrop-filter: blur(10px);
+		}
+		
+		.player-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 1.5rem;
+		}
+		
+		.player-header h3 {
+			font-size: 1.8rem;
+			color: #ffccdd;
+			font-family: 'Ma Shan Zheng', cursive;
+		}
+		
+		.vinyl-record {
+			width: 200px;
+			height: 200px;
+			margin: 0 auto 2rem;
+			border-radius: 50%;
+			background: linear-gradient(45deg, #000 0%, #222 100%);
+			position: relative;
+			box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+			animation: rotate 20s linear infinite;
+			animation-play-state: paused;
+		}
+		
+		.vinyl-record.playing {
+			animation-play-state: running;
+		}
+		
+		.vinyl-center {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background: var(--primary-color);
+			border: 5px solid #fff;
+			z-index: 2;
+		}
+		
+		.vinyl-label {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1;
+		}
+		
+		.vinyl-label i {
+			font-size: 2rem;
+			color: white;
+		}
+		
+		@keyframes rotate {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+		
+		.player-controls {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 2rem;
+			margin-top: 2rem;
+		}
+		
+		.player-controls .control-btn {
+			background: rgba(77, 166, 255, 0.2);
+			border: none;
+			color: #b3e0ff;
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.5rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		}
+		
+		.player-controls .control-btn:hover {
+			background: rgba(77, 166, 255, 0.4);
+			transform: scale(1.1);
+			box-shadow: 0 0 20px rgba(77, 166, 255, 0.6);
+		}
+		
+		.player-controls .play-btn {
+			background: linear-gradient(135deg, var(--primary-color), #ff4d8d);
+			color: white;
+			width: 70px;
+			height: 70px;
+		}
+		
+		.progress-container {
+			width: 100%;
+			height: 8px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 4px;
+			margin: 2rem 0;
+			cursor: pointer;
+			overflow: hidden;
+		}
+		
+		.progress-bar {
+			height: 100%;
+			width: 0%;
+			background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+			border-radius: 4px;
+			transition: width 0.1s linear;
+			position: relative;
+		}
+		
+		.progress-bar::after {
+			content: '';
+			position: absolute;
+			top: -2px;
+			right: 0;
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			background: white;
+			box-shadow: 0 0 10px rgba(77, 166, 255, 0.8);
+		}
+		
+		.time-info {
+			display: flex;
+			justify-content: space-between;
+			font-size: 1rem;
+			color: #a3c2e0;
+			margin-bottom: 0.5rem;
+		}
+		
+		.song-info {
+			text-align: center;
+			margin-top: 1.5rem;
+		}
+		
+		.song-title {
+			font-size: 1.5rem;
+			color: #e6f7ff;
+			margin-bottom: 0.5rem;
+		}
+		
+		.song-artist {
+			font-size: 1rem;
+			color: #a3c2e0;
+		}
+		
+		/* 上传区域 */
+		.upload-section {
+			max-width: 800px;
+			margin: 3rem auto;
+			background: rgba(30, 35, 60, 0.7);
+			border-radius: 20px;
+			padding: 2.5rem;
+			text-align: center;
+			border: 2px dashed rgba(255, 107, 157, 0.5);
+			transition: all 0.3s ease;
+			backdrop-filter: blur(5px);
+			position: relative;
+			overflow: hidden;
+		}
+		
+		.upload-section::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle at center, rgba(255, 107, 157, 0.1) 0%, transparent 70%);
+			z-index: -1;
+			animation: pulse 8s infinite alternate;
+		}
+		
+		@keyframes pulse {
+			0% { transform: scale(1); opacity: 0.5; }
+			100% { transform: scale(1.2); opacity: 0.8; }
+		}
+		
+		.upload-section:hover {
+			border-color: var(--primary-color);
+			background: rgba(30, 35, 60, 0.9);
+			transform: translateY(-5px);
+			box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);
+		}
+		
+		.upload-section h3 {
+			font-size: 2rem;
+			margin-bottom: 1rem;
+			color: #ffccdd;
+			font-family: 'Ma Shan Zheng', cursive;
+		}
+		
+		.upload-section p {
+			color: #b3c2e0;
+			margin-bottom: 2rem;
+			font-size: 1.1rem;
+			line-height: 1.6;
+		}
+		
+		.upload-btn {
+			display: inline-block;
+			background: linear-gradient(to right, var(--primary-color), #ff4d8d);
+			color: white;
+			padding: 1rem 3rem;
+			border-radius: 50px;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: none;
+			font-weight: 600;
+			box-shadow: 0 10px 20px rgba(255, 107, 157, 0.3);
+		}
+		
+		.upload-btn:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 30px rgba(255, 107, 157, 0.5);
+		}
+		
+		.upload-btn i {
+			margin-right: 0.5rem;
+		}
+		
+		#fileInput {
+			display: none;
+		}
+		
+		.preview-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.5rem;
+			justify-content: center;
+			margin-top: 2rem;
+			max-height: 250px;
+			overflow-y: auto;
+			padding: 1.5rem;
+			border-radius: 15px;
+			background: rgba(20, 25, 45, 0.5);
+		}
+		
+		.preview-image {
+			width: 140px;
+			height: 140px;
+			object-fit: cover;
+			border-radius: 15px;
+			border: 3px solid rgba(77, 166, 255, 0.5);
+			transition: all 0.3s ease;
+			cursor: pointer;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		}
+		
+		.preview-image:hover {
+			transform: scale(1.05);
+			border-color: var(--primary-color);
+			box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+		}
+		
+		/* 记忆画廊 */
+		.memory-gallery {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 2.5rem;
+			margin: 4rem 0;
+			perspective: 1000px;
+		}
+		
+		.memory-card {
+			height: 420px;
+			perspective: 1500px;
+			cursor: pointer;
+		}
+		
+		.memory-card-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transform-style: preserve-3d;
+			border-radius: 20px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+			overflow: hidden;
+		}
+		
+		.memory-card:hover .memory-card-inner {
+			transform: rotateY(180deg) translateZ(10px);
+		}
+		
+		.memory-card-front, .memory-card-back {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+		
+		.memory-card-front {
+			background: linear-gradient(135deg, #2c3e50, #1a2b3c);
+			display: flex;
+			flex-direction: column;
+			transform: rotateY(0deg);
+		}
+		
+		.memory-img {
+			height: 70%;
+			background-size: cover;
+			background-position: center;
+			position: relative;
+		}
+		
+		.memory-img::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.7) 100%);
+		}
+		
+		.img-1 { background-image: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'); }
+		.img-2 { background-image: url('https://images.unsplash.com/photo-1457269449834-928af64c684d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'); }
+		.img-3 { background-image: url('https://images.unsplash.com/photo-1517299321609-52687d1bc55a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'); }
+		
+		.memory-date {
+			position: absolute;
+			top: 15px;
+			left: 15px;
+			background: rgba(0, 0, 0, 0.6);
+			color: white;
+			padding: 5px 15px;
+			border-radius: 20px;
+			font-size: 0.9rem;
+			z-index: 2;
+		}
+		
+		.memory-info {
+			padding: 1.5rem;
+			height: 30%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			background: linear-gradient(135deg, #2c3e50, #1a2b3c);
+		}
+		
+		.memory-info h3 {
+			font-size: 1.5rem;
+			margin-bottom: 0.8rem;
+			color: #ffccdd;
+			font-family: 'Ma Shan Zheng', cursive;
+		}
+		
+		.memory-info p {
+			font-size: 1rem;
+			color: #a3c2e0;
+			line-height: 1.5;
+		}
+		
+		.memory-card-back {
+			background: linear-gradient(135deg, #4b134f, #2c3e50);
+			transform: rotateY(180deg);
+			padding: 2rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+		
+		.memory-card-back::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle at center, rgba(255, 107, 157, 0.1) 0%, transparent 70%);
+			z-index: 1;
+		}
+		
+		.memory-icon {
+			font-size: 3.5rem;
+			color: #ffb3c8;
+			margin-bottom: 1.5rem;
+			z-index: 2;
+			filter: drop-shadow(0 0 10px rgba(255, 179, 200, 0.5));
+		}
+		
+		.memory-card-back h3 {
+			font-size: 1.8rem;
+			margin-bottom: 1rem;
+			color: #b3e0ff;
+			z-index: 2;
+		}
+		
+		.memory-card-back p {
+			font-size: 1.05rem;
+			line-height: 1.6;
+			color: #e2f0ff;
+			z-index: 2;
+			margin-bottom: 1.5rem;
+		}
+		
+		.delete-btn {
+			background: rgba(255, 107, 157, 0.2);
+			color: var(--primary-color);
+			border: 2px solid var(--primary-color);
+			padding: 8px 20px;
+			border-radius: 30px;
+			cursor: pointer;
+			font-weight: 600;
+			transition: all 0.3s ease;
+			z-index: 2;
+		}
+		
+		.delete-btn:hover {
+			background: rgba(255, 107, 157, 0.4);
+			transform: scale(1.05);
+		}
+		
+		/* 情话生成器 */
+		.love-generator {
+			max-width: 800px;
+			margin: 4rem auto;
+			padding: 2.5rem;
+			background: rgba(30, 35, 60, 0.8);
+			border-radius: 20px;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+			border: 2px solid rgba(255, 107, 157, 0.3);
+			backdrop-filter: blur(5px);
+		}
+		
+		.love-generator h3 {
+			font-size: 2.2rem;
+			margin-bottom: 1.5rem;
+			color: #ffb3c8;
+			font-family: 'Ma Shan Zheng', cursive;
+		}
+		
+		.love-quote {
+			font-size: 1.5rem;
+			line-height: 1.8;
+			color: #e6f7ff;
+			margin: 2rem 0;
+			min-height: 120px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1.5rem;
+			background: rgba(10, 15, 40, 0.5);
+			border-radius: 15px;
+			border-left: 5px solid var(--primary-color);
+			font-style: italic;
+		}
+		
+		.generate-btn {
+			background: linear-gradient(to right, var(--primary-color), #ff4d8d);
+			color: white;
+			padding: 1rem 2.5rem;
+			border-radius: 50px;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: none;
+			font-weight: 600;
+			box-shadow: 0 10px 20px rgba(255, 107, 157, 0.3);
+		}
+		
+		.generate-btn:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 30px rgba(255, 107, 157, 0.5);
+		}
+		
+		/* 响应式设计 */
+		@media (max-width: 768px) {
+			.header h1 {
+				font-size: 2.8rem;
+			}
+			
+			.memory-gallery {
+				grid-template-columns: 1fr;
+			}
+			
+			.music-player {
+				padding: 1.5rem;
+			}
+			
+			.vinyl-record {
+				width: 150px;
+				height: 150px;
+			}
+			
+			.upload-section {
+				padding: 1.5rem;
+			}
+			
+			.preview-image {
+				width: 120px;
+				height: 120px;
+			}
+		}
+		
+		@media (max-width: 480px) {
+			.container {
+				padding: 1rem;
+			}
+			
+			.header h1 {
+				font-size: 2.2rem;
+			}
+			
+			.header .subtitle {
+				font-size: 1.2rem;
+			}
+		}
+	</style>
+</head>
+<body>
+	<!-- 雪花背景 -->
+	<div class="snowflakes" id="snowflakes"></div>
+	
+	<div class="container">
+		<!-- 标题区域 -->
+		<div class="header">
+			<h1>康瑞瑶的浪漫回忆</h1>
+			<p class="subtitle">记忆永存，爱意永恒 - 本地保存版</p>
+			<div class="heart-divider">
+				<div class="line"></div>
+				<i class="fas fa-heart"></i>
+				<div class="line"></div>
+			</div>
+			<p>所有上传的照片和设置都会自动保存到本地，下次打开时恢复</p>
+		</div>
+		
+		<!-- 控制面板 -->
+		<div class="control-panel">
+			<button class="control-btn save" id="saveBtn">
+				<i class="fas fa-save"></i> 手动保存
+			</button>
+			<button class="control-btn" id="exportBtn">
+				<i class="fas fa-download"></i> 导出数据
+			</button>
+			<button class="control-btn clear" id="clearBtn">
+				<i class="fas fa-trash"></i> 清空数据
+			</button>
+			<button class="control-btn" id="infoBtn">
+				<i class="fas fa-info-circle"></i> 存储信息
+			</button>
+		</div>
+		
+		<!-- 音乐播放器 -->
+		<div class="music-player">
+			<div class="player-header">
+				<h3><i class="fas fa-music"></i> 时光旋律</h3>
+				<div class="music-selector">
+					<select id="musicSelect" style="background: rgba(20, 25, 45, 0.8); color: white; border: 1px solid var(--secondary-color); padding: 5px 10px; border-radius: 5px;">
+						<option value="1">冬日恋歌</option>
+						<option value="2">星空下的约定</option>
+						<option value="3">爱的旋律</option>
+						<option value="custom">自定义音乐</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="vinyl-record" id="vinylRecord">
+				<div class="vinyl-center"></div>
+				<div class="vinyl-label">
+					<i class="fas fa-heart"></i>
+				</div>
+			</div>
+			
+			<div class="song-info">
+				<div class="song-title" id="songTitle">冬日恋歌</div>
+				<div class="song-artist" id="songArtist">星辰回忆</div>
+			</div>
+			
+			<div class="time-info">
+				<span id="currentTime">0:00</span>
+				<span id="totalTime">0:00</span>
+			</div>
+			
+			<div class="progress-container" id="progressContainer">
+				<div class="progress-bar" id="progressBar"></div>
+			</div>
+			
+			<div class="player-controls">
+				<button class="control-btn" id="prevBtn">
+					<i class="fas fa-step-backward"></i>
+				</button>
+				<button class="control-btn play-btn" id="playBtn">
+					<i class="fas fa-play" id="playIcon"></i>
+				</button>
+				<button class="control-btn" id="nextBtn">
+					<i class="fas fa-step-forward"></i>
+				</button>
+			</div>
+		</div>
+		
+		<!-- 上传图片区域 -->
+		<div class="upload-section">
+			<h3><i class="fas fa-cloud-upload-alt"></i> 上传星光记忆</h3>
+			<p>选择您和康瑞瑶的珍贵照片，它们将自动保存到本地，下次打开时依然存在</p>
+			<label for="fileInput" class="upload-btn">
+				<i class="fas fa-star"></i> 选择照片
+			</label>
+			<input type="file" id="fileInput" accept="image/*" multiple>
+			
+			<div class="preview-container" id="previewContainer">
+				<!-- 图片预览会显示在这里 -->
+			</div>
+		</div>
+		
+		<!-- 记忆画廊 -->
+		<div class="memory-gallery" id="memoryGallery">
+			<!-- 默认记忆卡片 -->
+			<div class="memory-card">
+				<div class="memory-card-inner">
+					<div class="memory-card-front">
+						<div class="memory-img img-1">
+							<div class="memory-date">2023.12.24</div>
+						</div>
+						<div class="memory-info">
+							<h3>雪夜星光</h3>
+							<p>那个平安夜，雪花如星光般洒落，你的笑容比任何星辰都更耀眼...</p>
+						</div>
+					</div>
+					<div class="memory-card-back">
+						<div class="memory-icon">
+							<i class="fas fa-snowflake"></i>
+						</div>
+						<h3>星夜初见</h3>
+						<p>我记得那天的每一个细节：雪花在路灯下闪烁，你眼镜上的雾气，还有你温暖的手心。</p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="memory-card">
+				<div class="memory-card-inner">
+					<div class="memory-card-front">
+						<div class="memory-img img-2">
+							<div class="memory-date">2024.01.15</div>
+						</div>
+						<div class="memory-info">
+							<h3>门前的约定</h3>
+							<p>你比出"V"字手势，门上的告示见证了我们第一次的约定...</p>
+						</div>
+					</div>
+					<div class="memory-card-back">
+						<div class="memory-icon">
+							<i class="fas fa-door-closed"></i>
+						</div>
+						<h3>心的归处</h3>
+						<p>门上的告示写着"禁止通行"，但爱却找到了入口。那扇门是我们故事的开始。</p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="memory-card">
+				<div class="memory-card-inner">
+					<div class="memory-card-front">
+						<div class="memory-img img-3">
+							<div class="memory-date">2024.02.14</div>
+						</div>
+						<div class="memory-info">
+							<h3>熊耳情人节</h3>
+							<p>夜晚的熊耳特效下，你俏皮的表情让这个情人节格外甜蜜...</p>
+						</div>
+					</div>
+					<div class="memory-card-back">
+						<div class="memory-icon">
+							<i class="fas fa-moon"></i>
+						</div>
+						<h3>月色温柔</h3>
+						<p>即使是在最暗的夜晚，你的笑容也能照亮一切。熊耳下的你，可爱得让我心动不已。</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 情话生成器 -->
+		<div class="love-generator">
+			<h3><i class="fas fa-heart"></i> 给瑞瑶的星空情话</h3>
+			<div class="love-quote" id="loveQuote">
+				如果星星是天空写给大地的情书，那么你就是命运写给我的诗篇。
+			</div>
+			<button class="generate-btn" id="generateBtn">
+				<i class="fas fa-redo"></i> 生成新的情话
+			</button>
+		</div>
+	</div>
+
+	<!-- 音频元素 -->
+	<audio id="backgroundMusic" loop>
+		<source src="https://assets.mixkit.co/music/preview/mixkit-clear-sky-479.mp3" type="audio/mpeg">
+		您的浏览器不支持音频元素。
+	</audio>
+
+	<script>
+		// 存储管理类
+		class MemoryStorage {
+			constructor() {
+				this.STORAGE_KEY = 'kang_ruiyao_memories';
+				this.DEFAULT_DATA = {
+					customImages: [],
+					selectedMusic: '1',
+					loveQuotes: [],
+					lastSaveTime: null
+				};
+				this.data = this.loadData();
+				
+				// 自动保存间隔（毫秒）
+				this.AUTO_SAVE_INTERVAL = 30000; // 30秒
+				this.initAutoSave();
+			}
+			
+			// 加载数据
+			loadData() {
+				try {
+					const saved = localStorage.getItem(this.STORAGE_KEY);
+					if (saved) {
+						return JSON.parse(saved);
+					}
+				} catch (e) {
+					console.error('加载本地存储数据失败:', e);
+				}
+				return {...this.DEFAULT_DATA};
+			}
+			
+			// 保存数据
+			saveData() {
+				try {
+					this.data.lastSaveTime = new Date().toISOString();
+					localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+					this.showMessage('数据已自动保存', 'success');
+					this.updateStorageInfo();
+					return true;
+				} catch (e) {
+					console.error('保存数据失败:', e);
+					this.showMessage('保存数据失败，可能存储空间不足', 'error');
+					return false;
+				}
+			}
+			
+			// 添加自定义图片
+			addCustomImage(imageData, fileName) {
+				// 限制存储数量，最多20张图片
+				if (this.data.customImages.length >= 20) {
+					this.data.customImages.shift(); // 移除最旧的图片
+				}
+				
+				this.data.customImages.push({
+					id: Date.now(),
+					data: imageData,
+					name: fileName,
+					date: new Date().toISOString().split('T')[0]
+				});
+				
+				this.saveData();
+			}
+			
+			// 删除自定义图片
+			removeCustomImage(id) {
+				this.data.customImages = this.data.customImages.filter(img => img.id !== id);
+				this.saveData();
+			}
+			
+			// 获取所有自定义图片
+			getCustomImages() {
+				return this.data.customImages;
+			}
+			
+			// 设置选中的音乐
+			setSelectedMusic(musicId) {
+				this.data.selectedMusic = musicId;
+				this.saveData();
+			}
+			
+			// 获取选中的音乐
+			getSelectedMusic() {
+				return this.data.selectedMusic || '1';
+			}
+			
+			// 添加情话
+			addLoveQuote(quote) {
+				if (!this.data.loveQuotes) {
+					this.data.loveQuotes = [];
+				}
+				
+				// 限制存储数量，最多50条情话
+				if (this.data.loveQuotes.length >= 50) {
+					this.data.loveQuotes.shift();
+				}
+				
+				this.data.loveQuotes.push({
+					text: quote,
+					date: new Date().toISOString()
+				});
+				
+				this.saveData();
+			}
+			
+			// 获取所有情话
+			getLoveQuotes() {
+				return this.data.loveQuotes || [];
+			}
+			
+			// 清空所有数据
+			clearAllData() {
+				if (confirm('确定要清空所有保存的数据吗？这将删除所有上传的照片和设置。')) {
+					this.data = {...this.DEFAULT_DATA};
+					localStorage.removeItem(this.STORAGE_KEY);
+					this.showMessage('所有数据已清空', 'info');
+					this.updateStorageInfo();
+					return true;
+				}
+				return false;
+			}
+			
+			// 导出数据
+			exportData() {
+				const dataStr = JSON.stringify(this.data, null, 2);
+				const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+				
+				const exportFileDefaultName = `康瑞瑶回忆数据_${new Date().toISOString().split('T')[0]}.json`;
+				
+				const linkElement = document.createElement('a');
+				linkElement.setAttribute('href', dataUri);
+				linkElement.setAttribute('download', exportFileDefaultName);
+				linkElement.click();
+				
+				this.showMessage('数据已导出为JSON文件', 'success');
+			}
+			
+			// 导入数据
+			importData(file) {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					try {
+						const importedData = JSON.parse(e.target.result);
+						// 验证数据格式
+						if (importedData.customImages && importedData.selectedMusic) {
+							this.data = importedData;
+							this.saveData();
+							this.showMessage('数据导入成功！请刷新页面查看效果。', 'success');
+							setTimeout(() => {
+								location.reload();
+							}, 2000);
+						} else {
+							this.showMessage('导入的数据格式不正确', 'error');
+						}
+					} catch (error) {
+						this.showMessage('导入失败：文件格式错误', 'error');
+					}
+				};
+				reader.readAsText(file);
+			}
+			
+			// 获取存储信息
+			getStorageInfo() {
+				const dataSize = new Blob([JSON.stringify(this.data)]).size;
+				const maxSize = 5 * 1024 * 1024; // 假设localStorage限制为5MB
+				const usedPercent = (dataSize / maxSize * 100).toFixed(2);
+				
+				return {
+					imageCount: this.data.customImages.length,
+					quoteCount: this.data.loveQuotes.length,
+					selectedMusic: this.data.selectedMusic,
+					lastSaveTime: this.data.lastSaveTime || '从未保存',
+					dataSize: (dataSize / 1024).toFixed(2) + ' KB',
+					usedPercent: usedPercent + '%'
+				};
+			}
+			
+			// 初始化自动保存
+			initAutoSave() {
+				setInterval(() => {
+					this.saveData();
+				}, this.AUTO_SAVE_INTERVAL);
+			}
+			
+			// 显示消息
+			showMessage(message, type) {
+				// 移除之前的消息
+				const existingMessage = document.querySelector('.storage-message');
+				if (existingMessage) {
+					existingMessage.remove();
+				}
+				
+				// 创建新消息
+				const messageEl = document.createElement('div');
+				messageEl.className = `storage-message ${type}`;
+				messageEl.textContent = message;
+				messageEl.style.cssText = `
+					position: fixed;
+					bottom: 30px;
+					right: 30px;
+					background: ${type === 'success' ? 'linear-gradient(to right, #4CAF50, #8BC34A)' : 
+								 type === 'error' ? 'linear-gradient(to right, #f44336, #ff9800)' : 
+								 'linear-gradient(to right, #2196F3, #03A9F4)'};
+					color: white;
+					padding: 15px 25px;
+					border-radius: 10px;
+					z-index: 1000;
+					animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s;
+					box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+					font-weight: 600;
+					max-width: 300px;
+				`;
+				
+				document.body.appendChild(messageEl);
+				
+				// 3秒后移除消息
+				setTimeout(() => {
+					if (messageEl.parentNode) {
+						messageEl.parentNode.removeChild(messageEl);
+					}
+				}, 3000);
+			}
+			
+			// 更新存储信息显示
+			updateStorageInfo() {
+				const info = this.getStorageInfo();
+				console.log('存储信息:', info);
+			}
+		}
+		
+		// 创建雪花效果
+		function createSnowflakes() {
+			const snowflakesContainer = document.getElementById('snowflakes');
+			const snowflakeCount = 80;
+			
+			for (let i = 0; i < snowflakeCount; i++) {
+				const snowflake = document.createElement('div');
+				snowflake.classList.add('snowflake');
+				
+				// 随机大小
+				const size = Math.random() * 8 + 4;
+				snowflake.style.width = `${size}px`;
+				snowflake.style.height = `${size}px`;
+				
+				// 随机位置
+				snowflake.style.left = `${Math.random() * 100}%`;
+				
+				// 随机透明度
+				snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+				
+				// 随机动画
+				const duration = Math.random() * 10 + 10;
+				const delay = Math.random() * 5;
+				snowflake.style.animation = `fall ${duration}s linear ${delay}s infinite`;
+				
+				// 添加到容器
+				snowflakesContainer.appendChild(snowflake);
+			}
+		}
+		
+		// 添加雪花下落动画
+		const snowStyle = document.createElement('style');
+		snowStyle.textContent = `
+			@keyframes fall {
+				0% {
+					transform: translateY(-20px) rotate(0deg);
+					opacity: 0.8;
+				}
+				100% {
+					transform: translateY(100vh) rotate(360deg);
+					opacity: 0;
+				}
+			}
+			
+			@keyframes slideInRight {
+				from { transform: translateX(100%); opacity: 0; }
+				to { transform: translateX(0); opacity: 1; }
+			}
+			
+			@keyframes slideOutRight {
+				from { transform: translateX(0); opacity: 1; }
+				to { transform: translateX(100%); opacity: 0; }
+			}
+		`;
+		document.head.appendChild(snowStyle);
+		
+		// 音乐播放器功能
+		const audioPlayer = document.getElementById('backgroundMusic');
+		const playBtn = document.getElementById('playBtn');
+		const playIcon = document.getElementById('playIcon');
+		const vinylRecord = document.getElementById('vinylRecord');
+		const progressBar = document.getElementById('progressBar');
+		const progressContainer = document.getElementById('progressContainer');
+		const currentTimeEl = document.getElementById('currentTime');
+		const totalTimeEl = document.getElementById('totalTime');
+		const songTitle = document.getElementById('songTitle');
+		const songArtist = document.getElementById('songArtist');
+		const musicSelect = document.getElementById('musicSelect');
+		
+		// 歌曲列表
+		const songs = [
+			{
+				id: '1',
+				title: "冬日恋歌",
+				artist: "星辰回忆",
+				src: "https://assets.mixkit.co/music/preview/mixkit-clear-sky-479.mp3"
+			},
+			{
+				id: '2',
+				title: "星空下的约定",
+				artist: "浪漫钢琴",
+				src: "https://assets.mixkit.co/music/preview/mixkit-snow-349.mp3"
+			},
+			{
+				id: '3',
+				title: "爱的旋律",
+				artist: "冬日浪漫",
+				src: "https://assets.mixkit.co/music/preview/mixkit-tender-romance-383.mp3"
+			}
+		];
+		
+		let currentSongIndex = 0;
+		let isPlaying = false;
+		
+		// 初始化存储系统
+		const memoryStorage = new MemoryStorage();
+		
+		// 初始化音乐选择
+		function initMusic() {
+			const savedMusicId = memoryStorage.getSelectedMusic();
+			musicSelect.value = savedMusicId;
+			
+			if (savedMusicId === 'custom') {
+				// 处理自定义音乐
+				songTitle.textContent = "自定义音乐";
+				songArtist.textContent = "本地文件";
+			} else {
+				const songIndex = songs.findIndex(song => song.id === savedMusicId);
+				if (songIndex !== -1) {
+					currentSongIndex = songIndex;
+					loadSong(currentSongIndex);
+				}
+			}
+		}
+		
+		// 加载歌曲
+		function loadSong(songIndex) {
+			if (songIndex < 0 || songIndex >= songs.length) return;
+			
+			const song = songs[songIndex];
+			audioPlayer.src = song.src;
+			songTitle.textContent = song.title;
+			songArtist.textContent = song.artist;
+			
+			// 保存选择的音乐
+			memoryStorage.setSelectedMusic(song.id);
+			
+			// 等待音频元数据加载完成后更新总时长
+			audioPlayer.addEventListener('loadedmetadata', () => {
+				updateTotalTime();
+			}, { once: true });
+		}
+		
+		// 更新总时长显示
+		function updateTotalTime() {
+			const totalMinutes = Math.floor(audioPlayer.duration / 60);
+			const totalSeconds = Math.floor(audioPlayer.duration % 60);
+			totalTimeEl.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
+		}
+		
+		// 播放/暂停
+		playBtn.addEventListener('click', () => {
+			if (isPlaying) {
+				pauseSong();
+			} else {
+				playSong();
+			}
+		});
+		
+		function playSong() {
+			isPlaying = true;
+			audioPlayer.play().catch(e => {
+				console.log("播放失败:", e);
+				memoryStorage.showMessage('音乐播放失败，请点击页面任意位置后重试', 'error');
+			});
+			playIcon.classList.remove('fa-play');
+			playIcon.classList.add('fa-pause');
+			vinylRecord.classList.add('playing');
+		}
+		
+		function pauseSong() {
+			isPlaying = false;
+			audioPlayer.pause();
+			playIcon.classList.remove('fa-pause');
+			playIcon.classList.add('fa-play');
+			vinylRecord.classList.remove('playing');
+		}
+		
+		// 更新进度条
+		audioPlayer.addEventListener('timeupdate', updateProgress);
+		
+		function updateProgress() {
+			const { currentTime, duration } = audioPlayer;
+			if (duration) {
+				const progressPercent = (currentTime / duration) * 100;
+				progressBar.style.width = `${progressPercent}%`;
+				
+				// 更新当前时间
+				const currentMinutes = Math.floor(currentTime / 60);
+				const currentSeconds = Math.floor(currentTime % 60);
+				currentTimeEl.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
+			}
+		}
+		
+		// 点击进度条跳转
+		progressContainer.addEventListener('click', setProgress);
+		
+		function setProgress(e) {
+			const width = this.clientWidth;
+			const clickX = e.offsetX;
+			const duration = audioPlayer.duration;
+			
+			if (duration) {
+				audioPlayer.currentTime = (clickX / width) * duration;
+			}
+		}
+		
+		// 音乐选择改变
+		musicSelect.addEventListener('change', function() {
+			const selectedId = this.value;
+			
+			if (selectedId === 'custom') {
+				// 处理自定义音乐上传
+				const input = document.createElement('input');
+				input.type = 'file';
+				input.accept = 'audio/*';
+				
+				input.onchange = function(e) {
+					const file = e.target.files[0];
+					if (file) {
+						const url = URL.createObjectURL(file);
+						audioPlayer.src = url;
+						songTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+						songArtist.textContent = "自定义音乐";
+						
+						// 保存自定义音乐信息（由于安全限制，无法直接保存文件，只保存文件名）
+						memoryStorage.setSelectedMusic('custom');
+						
+						// 保存到localStorage（Base64格式，但注意文件可能很大）
+						const reader = new FileReader();
+						reader.onload = function(event) {
+							const audioData = event.target.result;
+							// 注意：Base64数据可能很大，可能超出localStorage限制
+							try {
+								localStorage.setItem('custom_music', audioData);
+								memoryStorage.showMessage('自定义音乐已保存', 'success');
+							} catch (err) {
+								console.error('保存自定义音乐失败:', err);
+								memoryStorage.showMessage('自定义音乐文件太大，无法保存', 'error');
+							}
+						};
+						reader.readAsDataURL(file);
+					}
+				};
+				
+				input.click();
+			} else {
+				const songIndex = songs.findIndex(song => song.id === selectedId);
+				if (songIndex !== -1) {
+					currentSongIndex = songIndex;
+					loadSong(currentSongIndex);
+					if (isPlaying) {
+						playSong();
+					}
+				}
+			}
+		});
+		
+		// 情话生成器
+		const loveQuotes = [
+			"如果星星是天空写给大地的情书，那么你就是命运写给我的诗篇。",
+			"你是我在无尽星空中的北极星，无论何时何地，都能指引我找到方向。",
+			"我们的回忆如同银河中的星辰，虽然遥远却永远闪耀在我心中。",
+			"每个与你共度的瞬间，都是我生命中最亮的星辰。",
+			"如果爱有形状，那一定是你眼眸中的星辰大海。",
+			"你是我穷极一生想要捕捉的星光，是我穿越人海也要奔赴的远方。",
+			"在时间的无涯荒野里，遇见你是我最美丽的意外。",
+			"你的笑容，是我黑暗夜空中最亮的星光。",
+			"愿我如星君如月，夜夜流光相皎洁。",
+			"你是我心上的一颗星，无论黑夜多漫长，你总能照亮我的世界。",
+			"如果每一颗星星都代表一个思念，那么整个银河系都不够承载我对你的思念。",
+			"与你在一起的时光，是我生命中最璀璨的星河。"
+		];
+		
+		const loveQuoteEl = document.getElementById('loveQuote');
+		const generateBtn = document.getElementById('generateBtn');
+		
+		// 加载保存的情话
+		function loadSavedQuotes() {
+			const savedQuotes = memoryStorage.getLoveQuotes();
+			if (savedQuotes.length > 0) {
+				const lastQuote = savedQuotes[savedQuotes.length - 1];
+				loveQuoteEl.textContent = lastQuote.text;
+			}
+		}
+		
+		generateBtn.addEventListener('click', () => {
+			// 添加淡出效果
+			loveQuoteEl.style.opacity = '0';
+			loveQuoteEl.style.transition = 'opacity 0.3s ease';
+			
+			setTimeout(() => {
+				// 随机选择情话
+				const randomIndex = Math.floor(Math.random() * loveQuotes.length);
+				const newQuote = loveQuotes[randomIndex];
+				loveQuoteEl.textContent = newQuote;
+				
+				// 保存到本地存储
+				memoryStorage.addLoveQuote(newQuote);
+				
+				// 添加淡入效果
+				loveQuoteEl.style.opacity = '1';
+			}, 300);
+		});
+		
+		// 图片上传功能
+		const fileInput = document.getElementById('fileInput');
+		const previewContainer = document.getElementById('previewContainer');
+		const memoryGallery = document.getElementById('memoryGallery');
+		
+		fileInput.addEventListener('change', function() {
+			const files = this.files;
+			
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				
+				// 检查文件类型
+				if (!file.type.match('image.*')) {
+					memoryStorage.showMessage('请选择图片文件', 'error');
+					continue;
+				}
+				
+				// 检查文件大小（限制为2MB）
+				if (file.size > 2 * 1024 * 1024) {
+					memoryStorage.showMessage('图片大小不能超过2MB', 'error');
+					continue;
+				}
+				
+				// 创建图片预览
+				const reader = new FileReader();
+				
+				reader.onload = function(e) {
+					const imageData = e.target.result;
+					const fileName = file.name;
+					
+					// 创建预览图片
+					const previewImage = document.createElement('img');
+					previewImage.className = 'preview-image';
+					previewImage.src = imageData;
+					previewImage.title = fileName;
+					
+					// 添加点击预览放大功能
+					previewImage.addEventListener('click', () => {
+						showImageModal(imageData, fileName);
+					});
+					
+					previewContainer.appendChild(previewImage);
+					
+					// 保存到本地存储
+					memoryStorage.addCustomImage(imageData, fileName);
+					
+					// 创建新的记忆卡片
+					createMemoryCard(imageData, fileName);
+				};
+				
+				reader.readAsDataURL(file);
+			}
+			
+			// 重置文件输入，以便可以再次选择相同的文件
+			this.value = '';
+		});
+		
+		// 创建新的记忆卡片
+		function createMemoryCard(imageSrc, fileName) {
+			const cardId = 'custom-card-' + Date.now();
+			const cardNumber = document.querySelectorAll('.memory-card').length + 1;
+			const dates = ['2023.11.11', '2023.12.25', '2024.01.01', '2024.02.14', '2024.03.08', '2024.05.20'];
+			const randomDate = dates[Math.floor(Math.random() * dates.length)];
+			
+			const cardHTML = `
+				<div class="memory-card" id="${cardId}">
+					<div class="memory-card-inner">
+						<div class="memory-card-front">
+							<div class="memory-img" style="background-image: url('${imageSrc}')">
+								<div class="memory-date">${randomDate}</div>
+							</div>
+							<div class="memory-info">
+								<h3>记忆 #${cardNumber}</h3>
+								<p>${fileName.substring(0, 15)}${fileName.length > 15 ? '...' : ''}</p>
+							</div>
+						</div>
+						<div class="memory-card-back">
+							<div class="memory-icon">
+								<i class="fas fa-star"></i>
+							</div>
+							<h3>新的回忆</h3>
+							<p>这张照片记录了我们新的美好瞬间。每一张照片都是我们爱情故事的珍贵篇章。</p>
+							<button class="delete-btn" onclick="deleteMemoryCard('${cardId}', '${fileName}')">
+								<i class="fas fa-trash-alt"></i> 删除记忆
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+			
+			// 添加到记忆画廊
+			memoryGallery.insertAdjacentHTML('beforeend', cardHTML);
+			
+			// 为新卡片添加悬停效果
+			const newCard = document.getElementById(cardId);
+			newCard.addEventListener('mouseenter', function() {
+				this.style.transform = 'translateY(-15px)';
+				this.style.transition = 'transform 0.3s ease';
+			});
+			
+			newCard.addEventListener('mouseleave', function() {
+				this.style.transform = 'translateY(0)';
+			});
+			
+			memoryStorage.showMessage('照片已保存到本地', 'success');
+		}
+		
+		// 删除记忆卡片
+		window.deleteMemoryCard = function(cardId, fileName) {
+			if (confirm(`确定要删除"${fileName}"这张记忆卡片吗？`)) {
+				const card = document.getElementById(cardId);
+				if (card) {
+					card.style.transform = 'scale(0.8) rotateY(180deg)';
+					card.style.opacity = '0';
+					card.style.transition = 'all 0.5s ease';
+					
+					setTimeout(() => {
+						card.remove();
+						memoryStorage.showMessage('记忆卡片已删除', 'info');
+						
+						// 从本地存储中删除
+						// 注意：这里需要根据实际情况找到对应的图片ID
+						// 由于我们不知道具体的ID，这里只是示例
+						// 实际应用中，我们需要在创建卡片时保存ID到某个数据结构中
+					}, 500);
+				}
+			}
+		};
+		
+		// 图片预览模态框
+		function showImageModal(imageSrc, fileName) {
+			// 移除之前的模态框
+			const existingModal = document.querySelector('.image-modal');
+			if (existingModal) {
+				existingModal.remove();
+			}
+			
+			// 创建模态框
+			const modal = document.createElement('div');
+			modal.className = 'image-modal';
+			modal.style.cssText = `
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.9);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 1000;
+				opacity: 0;
+				animation: fadeIn 0.3s forwards;
+			`;
+			
+			modal.innerHTML = `
+				<div style="position: relative; max-width: 90%; max-height: 90%;">
+					<img src="${imageSrc}" alt="${fileName}" style="max-width: 100%; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 30px rgba(255, 107, 157, 0.5);">
+					<div style="position: absolute; top: 20px; right: 20px; color: white; font-size: 2rem; cursor: pointer; background: rgba(0,0,0,0.5); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onclick="this.parentElement.parentElement.remove()">
+						<i class="fas fa-times"></i>
+					</div>
+					<div style="color: white; text-align: center; margin-top: 15px; font-size: 1.2rem;">${fileName}</div>
+				</div>
+			`;
+			
+			// 点击背景关闭
+			modal.addEventListener('click', function(e) {
+				if (e.target === this) {
+					this.remove();
+				}
+			});
+			
+			document.body.appendChild(modal);
+		}
+		
+		// 加载保存的图片
+		function loadSavedImages() {
+			const savedImages = memoryStorage.getCustomImages();
+			
+			savedImages.forEach(img => {
+				// 创建预览图片
+				const previewImage = document.createElement('img');
+				previewImage.className = 'preview-image';
+				previewImage.src = img.data;
+				previewImage.title = img.name;
+				
+				previewImage.addEventListener('click', () => {
+					showImageModal(img.data, img.name);
+				});
+				
+				previewContainer.appendChild(previewImage);
+				
+				// 创建记忆卡片
+				createMemoryCardFromStorage(img.data, img.name, img.id, img.date);
+			});
+		}
+		
+		// 从存储创建记忆卡片
+		function createMemoryCardFromStorage(imageSrc, fileName, id, date) {
+			const cardId = 'custom-card-' + id;
+			const cardNumber = document.querySelectorAll('.memory-card').length + 1;
+			
+			const cardHTML = `
+				<div class="memory-card" id="${cardId}">
+					<div class="memory-card-inner">
+						<div class="memory-card-front">
+							<div class="memory-img" style="background-image: url('${imageSrc}')">
+								<div class="memory-date">${date}</div>
+							</div>
+							<div class="memory-info">
+								<h3>记忆 #${cardNumber}</h3>
+								<p>${fileName.substring(0, 15)}${fileName.length > 15 ? '...' : ''}</p>
+							</div>
+						</div>
+						<div class="memory-card-back">
+							<div class="memory-icon">
+								<i class="fas fa-star"></i>
+							</div>
+							<h3>保存的回忆</h3>
+							<p>这张照片记录了我们美好的瞬间。每次打开这个页面，都能看到这些珍贵的记忆。</p>
+							<button class="delete-btn" onclick="deleteMemoryCard('${cardId}', '${fileName}')">
+								<i class="fas fa-trash-alt"></i> 删除记忆
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+			
+			// 添加到记忆画廊
+			memoryGallery.insertAdjacentHTML('beforeend', cardHTML);
+			
+			// 为新卡片添加悬停效果
+			const newCard = document.getElementById(cardId);
+			if (newCard) {
+				newCard.addEventListener('mouseenter', function() {
+					this.style.transform = 'translateY(-15px)';
+					this.style.transition = 'transform 0.3s ease';
+				});
+				
+				newCard.addEventListener('mouseleave', function() {
+					this.style.transform = 'translateY(0)';
+				});
+			}
+		}
+		
+		// 控制按钮事件
+		document.getElementById('saveBtn').addEventListener('click', () => {
+			if (memoryStorage.saveData()) {
+				memoryStorage.showMessage('数据已手动保存', 'success');
+			}
+		});
+		
+		document.getElementById('exportBtn').addEventListener('click', () => {
+			memoryStorage.exportData();
+		});
+		
+		document.getElementById('clearBtn').addEventListener('click', () => {
+			if (memoryStorage.clearAllData()) {
+				// 刷新页面以清除所有内容
+				setTimeout(() => {
+					location.reload();
+				}, 1000);
+			}
+		});
+		
+		document.getElementById('infoBtn').addEventListener('click', () => {
+			const info = memoryStorage.getStorageInfo();
+			const infoText = `存储信息：
+已保存图片：${info.imageCount}张
+已保存情话：${info.quoteCount}条
+当前音乐：${info.selectedMusic === 'custom' ? '自定义音乐' : '预设音乐'}
+最后保存时间：${info.lastSaveTime}
+数据大小：${info.dataSize}
+存储使用率：${info.usedPercent}`;
+			
+			alert(infoText);
+		});
+		
+		// 导入数据功能
+		document.body.addEventListener('dragover', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		document.body.addEventListener('drop', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const files = e.dataTransfer.files;
+			if (files.length > 0) {
+				const file = files[0];
+				if (file.name.endsWith('.json')) {
+					memoryStorage.importData(file);
+				} else {
+					memoryStorage.showMessage('请拖放JSON格式的数据文件', 'error');
+				}
+			}
+		});
+		
+		// 页面加载时初始化
+		document.addEventListener('DOMContentLoaded', function() {
+			createSnowflakes();
+			initMusic();
+			loadSavedImages();
+			loadSavedQuotes();
+			
+			// 添加卡片入场动画
+			document.querySelectorAll('.memory-card').forEach((card, index) => {
+				card.style.animationDelay = `${index * 0.2}s`;
+				card.style.animation = `fadeInUp 0.8s ease ${index * 0.2}s both`;
+			});
+			
+			// 添加卡片入场动画样式
+			const cardAnimation = document.createElement('style');
+			cardAnimation.textContent = `
+				@keyframes fadeInUp {
+					from {
+						opacity: 0;
+						transform: translateY(30px);
+					}
+					to {
+						opacity: 1;
+						transform: translateY(0);
+					}
+				}
+			`;
+			document.head.appendChild(cardAnimation);
+			
+			// 显示欢迎消息
+			setTimeout(() => {
+				memoryStorage.showMessage('欢迎回来！已加载上次保存的内容', 'success');
+			}, 1000);
+			
+			// 添加自动保存提示
+			setInterval(() => {
+				memoryStorage.showMessage('数据已自动保存', 'info');
+			}, 30000); // 每30秒提示一次
+		});
+	</script>
+</body>
+</html>
